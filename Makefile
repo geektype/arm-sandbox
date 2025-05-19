@@ -16,34 +16,41 @@ TARGET=$(BUILD_DIR)/main.elf
 
 
 OBJ_DIR=$(BUILD_DIR)/obj
-ARCHIVE=$(BUILD_DIR)/$(LIB_NAME).a
 
-ASRCS := $(wildcard $(SOURCE_DIR)/*.s)
-CSRCS := $(wildcard $(SOURCE_DIR)/*.c)
+SRCS := $(shell find $(SOURCE_DIR) -type f -name '*.c')
+ASRCS := $(shell find $(SOURCE_DIR) -type f -name '*.s')
 
-OBJS := $(addprefix $(OBJ_DIR)/, $(notdir $(ASRCS:.s=.o) $(CSRCS:.c=.o)))
+HEADER_DIRS := $(shell find $(SOURCE_DIR) -type f -name '*.h' -exec dirname {} \; | sort -u)
+INCLUDE_FLAGS := $(patsubst %, -I%, $(HEADER_DIRS))
+
+OBJS := $(SRCS:$(SOURCE_DIR)/%.c=$(OBJ_DIR)/%.o) $(ASRCS:$(SOURCE_DIR)/%.s=$(OBJ_DIR)/%.o)
+
 
 $(TARGET): $(OBJS)
-	$(LD) $(LDFLAGS) -o $@ $^
+	@$(LD) $(LDFLAGS) -o $@ $^
 
 
 $(OBJ_DIR)/%.o: $(SOURCE_DIR)/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -o $@ $^
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDE_FLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SOURCE_DIR)/%.s | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	$(AS) $(ASFLAGS) -o $@ $^
 
 $(OBJ_DIR):
 	mkdir -p $@
 
-.PHONY: build run debug clean
+.PHONY: build run debug gen-commands clean
 
 build: $(TARGET)
 
 run: $(TARGET)
 	qemu-system-arm $(QEMU_FLAGS)
 debug: $(TARGET)
-	$(GDB) $(TARGET) -ex "target remote localhost:1234"
+	$(GDB) $(TARGET) -ex "a"
+gen-commands:
+	make -Bnw | python3 scripts/gen_compile_commands.py	
 
 clean:
 	rm -fr $(BUILD_DIR)
