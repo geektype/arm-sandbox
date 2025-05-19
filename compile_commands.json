@@ -1,0 +1,17 @@
+[
+  {
+    "directory": "/Users/abdullah_u/arm",
+    "command": "arm-none-eabi-gcc -g -c -ffreestanding -std=c11 -O0  -Isrc/kernel  -Isrc/lib/string  -Isrc/lib/types -o build/obj/lib/string/string.o src/lib/string/string.c",
+    "file": "src/lib/string/string.c"
+  },
+  {
+    "directory": "/Users/abdullah_u/arm",
+    "command": "arm-none-eabi-gcc -g -c -ffreestanding -std=c11 -O0  -Isrc/kernel  -Isrc/lib/string  -Isrc/lib/types -o build/obj/kernel/fdt.o src/kernel/fdt.c",
+    "file": "src/kernel/fdt.c"
+  },
+  {
+    "directory": "/Users/abdullah_u/arm",
+    "command": "arm-none-eabi-gcc -g -c -ffreestanding -std=c11 -O0  -Isrc/kernel  -Isrc/lib/string  -Isrc/lib/types -o build/obj/kernel/main.o src/kernel/main.c",
+    "file": "src/kernel/main.c"
+  }
+]
