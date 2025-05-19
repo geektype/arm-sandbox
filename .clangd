@@ -1,0 +1,6 @@
+CompileFlags:
+  # Treat project as freestanding - no standard library
+  Add: [-ffreestanding, -nostdinc]
+  
+  # Ignore all system includes
+  Ignore: [-I/usr/**, -I/lib/**]
