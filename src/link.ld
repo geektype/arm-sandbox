@@ -17,6 +17,6 @@ SECTIONS
         *(COMMON)
     }
     . = ALIGN(8);
-    . = . + 0x1000;
+    . = . + 0xF4240;
     stack_top = .;
 }
